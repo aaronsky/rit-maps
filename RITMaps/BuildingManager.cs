@@ -6,7 +6,7 @@ namespace RITMaps
 {
 	public static class BuildingManager
 	{
-		public static List<RITBuilding> Buildings { get; set; }
+		public static List<IRITBuilding> Buildings { get; set; }
 
 		static readonly IResourceLoader resourceLoader;
 
