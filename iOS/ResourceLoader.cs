@@ -5,7 +5,7 @@ namespace RITMaps.iOS
 {
 	public class ResourceLoader : IResourceLoader
 	{
-		public IEnumerable<RITBuilding> Load (ResourceFile resource)
+		public IEnumerable<IRITBuilding> Load (ResourceFile resource)
 		{
 			throw new NotImplementedException ();
 		}

@@ -11,22 +11,11 @@ using UIKit;
 
 namespace RITMaps.iOS
 {
-	[Register ("ViewController")]
-	partial class ViewController
+	[Register ("RoomViewController")]
+	partial class RoomViewController
 	{
-		[Outlet]
-		UIKit.UIButton Button { get; set; }
-
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		MapKit.MKMapView activeMapView { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
-			if (activeMapView != null) {
-				activeMapView.Dispose ();
-				activeMapView = null;
-			}
 		}
 	}
 }
