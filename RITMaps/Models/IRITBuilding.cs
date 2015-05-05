@@ -6,7 +6,7 @@
 
 		string BuildingId { get; set; }
 
-		string Description { get; set; }
+		string ShortDescription { get; set; }
 
 		string ImageUrl { get; set; }
 

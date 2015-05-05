@@ -7,7 +7,7 @@ namespace RITMaps.iOS
 	{
 		public IEnumerable<IRITBuilding> Load (ResourceFile resource)
 		{
-			throw new NotImplementedException ();
+			return new List<BuildingAnnotation> ();
 		}
 	}
 }

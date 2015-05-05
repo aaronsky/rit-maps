@@ -10,6 +10,8 @@ namespace RITMaps.iOS
 
 		public string BuildingId { get; set; }
 
+		public string ShortDescription { get; set; }
+
 		public string ImageUrl { get; set; }
 
 		public string Abbreviation { get; set; }
@@ -20,11 +22,14 @@ namespace RITMaps.iOS
 
 		public string[] Tags { get; set; }
 
-		public override string Title { get; }
+		string title;
+		public override string Title { get { return title; } }
 
-		public override string Subtitle { get; }
+		string subtitle;
+		public override string Subtitle { get { return subtitle; } }
 
-		public override CLLocationCoordinate2D Coordinate { get; set; }
+		CLLocationCoordinate2D coordinate;
+		public override CLLocationCoordinate2D Coordinate { get { return coordinate; } }
 
 		public BuildingPolygon Boundaries { get; }
 
@@ -32,9 +37,9 @@ namespace RITMaps.iOS
 		                           string title,
 		                           string subtitle)
 		{
-			Coordinate = coord;
-			Title = title;
-			Subtitle = subtitle;
+			coordinate = coord;
+			this.title = title;
+			this.subtitle = subtitle;
 		}
 	}
 }

@@ -66,7 +66,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
     <Reference Include="Calabash">
-      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.13.0\lib\Xamarin.iOS10\Calabash.dll</HintPath>
+      <HintPath>..\packages\Xamarin.TestCloud.Agent.0.14.1\lib\Xamarin.iOS10\Calabash.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -112,22 +112,24 @@
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Models\BuildingAnnotation.cs" />
     <Compile Include="Models\BuildingPolygon.cs" />
-    <Compile Include="ResourceLoader.cs" />
-    <Compile Include="RoomViewController.cs" />
-    <Compile Include="RoomViewController.designer.cs">
-      <DependentUpon>RoomViewController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BuildingViewController.cs" />
-    <Compile Include="BuildingViewController.designer.cs">
+    <Compile Include="Helpers\ResourceLoader.cs" />
+    <Compile Include="Controllers\BuildingViewController.cs" />
+    <Compile Include="Controllers\BuildingViewController.designer.cs">
       <DependentUpon>BuildingViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="CampusViewController.cs" />
-    <Compile Include="CampusViewController.designer.cs">
+    <Compile Include="Controllers\CampusViewController.cs" />
+    <Compile Include="Controllers\CampusViewController.designer.cs">
       <DependentUpon>CampusViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\RoomViewController.cs" />
+    <Compile Include="Controllers\RoomViewController.designer.cs">
+      <DependentUpon>RoomViewController.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Models\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>
