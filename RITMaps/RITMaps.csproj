@@ -35,7 +35,7 @@
     <Compile Include="Helpers\Resources.cs" />
     <Compile Include="Helpers\BuildingFactory.cs" />
     <Compile Include="Helpers\IResourceLoader.cs" />
-    <Compile Include="Helpers\BuildingManager.cs" />
+    <Compile Include="Helpers\BuildingManagerPCL.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

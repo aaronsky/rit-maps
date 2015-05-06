@@ -11,11 +11,11 @@ namespace RITMaps
 
 	public static class Resources
 	{
-		static string MarkerFileName { get; } = "all-rit-markers";
+		static string MarkerFileName { get; } = "all-rit-markers.js";
 
-		static string PolygonFileName { get; } = "all-rit-polygons";
+		static string PolygonFileName { get; } = "all-rit-polygons.js";
 
-		static string TagFileName { get; } = "all-rit-tags";
+		static string TagFileName { get; } = "all-rit-tags.js";
 
 		public static string ResourceFileToFileName (ResourceFile resource)
 		{

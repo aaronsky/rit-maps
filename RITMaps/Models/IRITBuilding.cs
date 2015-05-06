@@ -2,6 +2,8 @@
 {
 	public interface IRITBuilding
 	{
+		string Id { get; set; }
+
 		string Name { get; set; }
 
 		string BuildingId { get; set; }

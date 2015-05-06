@@ -23,7 +23,7 @@ namespace RITMaps.iOS
 			activeMapView.ShowsUserLocation = true;
 			activeMapView.SetUserTrackingMode (MKUserTrackingMode.Follow, true);
 
-			var pins = BuildingManager.Buildings.Cast<BuildingAnnotation> ().ToArray();
+			var pins = BuildingManager.Buildings.ToArray();
 			activeMapView.AddAnnotations (pins);
 			activeMapView.ShowAnnotations (activeMapView.Annotations, true);
 			if (CurrentSelection != null) {
@@ -179,7 +179,7 @@ namespace RITMaps.iOS
 			activeMapView.RemoveOverlays (activeMapView.Overlays);
 			foreach (var building in BuildingManager.Buildings) {
 				building.Boundaries.PointInsidePolygon (activeMapView.UserLocation.Coordinate);
-				if (building.Path.Count != 0) {
+				if (building.Boundaries.Path.Length != 0) {
 					activeMapView.AddOverlay (building.Boundaries);
 				}
 			}
