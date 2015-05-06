@@ -6,17 +6,20 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections;
+using Foundation;
 
 namespace RITMaps.iOS
 {
 	public class ResourceLoader : IResourceLoader
 	{
-		public async Task<IRITBuilding[]> Load (ResourceFile resource)
+		public IRITBuilding[] Load (ResourceFile resource)
 		{
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
-			var jsonStr = File.ReadAllText(Resources.ResourceFileToFileName (resource));
+			var path = NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (resource), "js");
+			var jsonStr = File.ReadAllText(path);
 			var json = JObject.Parse (jsonStr);
-			Console.WriteLine ();
+			var buildingsJObj = json ["response"] ["docs"];
+			Console.WriteLine (buildingsJObj);
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 			/*
     [NSURLConnection sendAsynchronousRequest:[[NSURLRequest alloc] initWithURL:resourceLocation] queue:[[NSOperationQueue alloc]init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -65,7 +68,7 @@ namespace RITMaps.iOS
         }
     }];
 			*/
-			return new BuildingAnnotation[] {};
+			return new BuildingAnnotation[]{};
 		}
 	}
 }

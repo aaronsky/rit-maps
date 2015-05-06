@@ -6,7 +6,7 @@ namespace RITMaps
 {
 	public interface IResourceLoader
 	{
-		Task<IRITBuilding[]> Load(ResourceFile resource);
+		IRITBuilding[] Load(ResourceFile resource);
 	}
 }
 

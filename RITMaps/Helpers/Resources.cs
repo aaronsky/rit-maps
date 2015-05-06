@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RITMaps
+﻿namespace RITMaps
 {
 	public enum ResourceFile
 	{
@@ -11,11 +9,11 @@ namespace RITMaps
 
 	public static class Resources
 	{
-		static string MarkerFileName { get; } = "all-rit-markers.js";
+		static string MarkerFileName { get; } = "all-rit-markers";
 
-		static string PolygonFileName { get; } = "all-rit-polygons.js";
+		static string PolygonFileName { get; } = "all-rit-polygons";
 
-		static string TagFileName { get; } = "all-rit-tags.js";
+		static string TagFileName { get; } = "all-rit-tags";
 
 		public static string ResourceFileToFileName (ResourceFile resource)
 		{

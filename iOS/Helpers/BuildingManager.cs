@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RITMaps.iOS
 {
-	public class BuildingManager : BuildingManagerPCL
+	public class BuildingManager : BuildingManagerBase
 	{
 		public static List<BuildingAnnotation> Buildings { get; set; }
 
-		static BuildingManager()
+		static BuildingManager ()
 		{
-			LoadData ();
+			ResourceLoader = BuildingFactory.Create ();
 		}
 
-		public static async void LoadData ()
+		public static void LoadData()
 		{
-			BuildingAnnotation[] loadedBuildings = (BuildingAnnotation[])await ResourceLoader.Load (ResourceFile.Markers);
-			Buildings.AddRange (loadedBuildings);
+			var loadedBuildings = ResourceLoader.Load (ResourceFile.Markers);
+			Buildings.AddRange (loadedBuildings.Cast<BuildingAnnotation>());
 		}
-
 	}
 }
 

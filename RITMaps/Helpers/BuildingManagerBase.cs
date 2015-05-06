@@ -4,14 +4,9 @@ using System.Collections.Generic;
 
 namespace RITMaps
 {
-	public abstract class BuildingManagerPCL
+	public abstract class BuildingManagerBase
 	{
 		public static IResourceLoader ResourceLoader { get; protected set; }
-
-		protected BuildingManagerPCL ()
-		{
-			ResourceLoader = BuildingFactory.Create ();
-		}
 	}
 }
 
