@@ -136,4 +136,10 @@
     <Folder Include="Helpers\" />
     <Folder Include="Controllers\" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\all-rit-buildings.js" />
+    <BundleResource Include="Resources\all-rit-markers.js" />
+    <BundleResource Include="Resources\all-rit-polygons.js" />
+    <BundleResource Include="Resources\all-rit-tags.js" />
+  </ItemGroup>
 </Project>
