@@ -130,6 +130,10 @@
       <DependentUpon>RoomViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BuildingManager.cs" />
+    <Compile Include="Controllers\LoadDataViewController.cs" />
+    <Compile Include="Controllers\LoadDataViewController.designer.cs">
+      <DependentUpon>LoadDataViewController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

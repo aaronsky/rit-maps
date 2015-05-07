@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="IZo-vf-jiW">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7q9-Fg-Tdg">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--RIT Map-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="CampusViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7"/>
+                        <viewControllerLayoutGuide type="bottom" id="8"/>
+                    </layoutGuides>
                     <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="cF3-L5-YlK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -226,6 +231,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4ys-4m-jfQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1788" y="248"/>
+        </scene>
+        <!--Load Data View Controller-->
+        <scene sceneID="CbF-XT-b6l">
+            <objects>
+                <viewController id="7q9-Fg-Tdg" sceneMemberID="viewController" customClass="LoadDataViewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mXk-lF-myb"/>
+                        <viewControllerLayoutGuide type="bottom" id="7P8-gS-quB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="w6y-br-qUW">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="fMo-lW-Hb2" misplaced="YES">
+                                <rect key="frame" x="16" y="304" width="568" height="2.5"/>
+                                <color key="progressTintColor" red="1" green="0.60075561079999995" blue="0.1261036881" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="trackTintColor" red="0.71437026515151514" green="0.43017340937944354" blue="0.087203345075787128" alpha="1" colorSpace="calibratedRGB"/>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cYm-O5-rES" misplaced="YES">
+                                <rect key="frame" x="16" y="314" width="568" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="cYm-O5-rES" firstAttribute="top" secondItem="fMo-lW-Hb2" secondAttribute="bottom" constant="8" symbolic="YES" id="01V-Zn-uRT"/>
+                            <constraint firstItem="cYm-O5-rES" firstAttribute="trailing" secondItem="fMo-lW-Hb2" secondAttribute="trailing" id="A7X-N7-D7S"/>
+                            <constraint firstItem="fMo-lW-Hb2" firstAttribute="leading" secondItem="w6y-br-qUW" secondAttribute="leadingMargin" id="EIm-Ju-g8h"/>
+                            <constraint firstItem="cYm-O5-rES" firstAttribute="trailing" secondItem="w6y-br-qUW" secondAttribute="trailingMargin" id="Zua-ee-JxV"/>
+                            <constraint firstItem="cYm-O5-rES" firstAttribute="leading" secondItem="fMo-lW-Hb2" secondAttribute="leading" id="rYo-q3-lXM"/>
+                            <constraint firstItem="7P8-gS-quB" firstAttribute="top" secondItem="cYm-O5-rES" secondAttribute="bottom" constant="265" id="ta2-CW-MGK"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loadProgressLabel" destination="cYm-O5-rES" id="JZ9-EA-oso"/>
+                        <outlet property="loadProgressView" destination="fMo-lW-Hb2" id="mYx-pU-XK8"/>
+                        <segue destination="IZo-vf-jiW" kind="presentation" identifier="loadSucceed" id="VuA-Zv-rGp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Zl-1S-xX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1052" y="248"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="P2E-MY-eqV">

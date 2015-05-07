@@ -6,7 +6,6 @@ namespace RITMaps
 {
 	public abstract class BuildingManagerBase
 	{
-		public static IResourceLoader ResourceLoader { get; protected set; }
 	}
 }
 

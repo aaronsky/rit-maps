@@ -26,7 +26,6 @@ namespace RITMaps.iOS
 			#endif
 
 			BuildingFactory.Create = () => new ResourceLoader();
-			BuildingManager.LoadData ();
 
 			return true;
 		}
