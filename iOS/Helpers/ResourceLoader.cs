@@ -1,74 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 using UIKit;
-using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Collections;
+using System.Linq;
 using Foundation;
+using CoreLocation;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace RITMaps.iOS
 {
 	public class ResourceLoader : IResourceLoader
 	{
-		public IRITBuilding[] Load (ResourceFile resource)
+		public async Task<IEnumerable<IRITBuilding>> Load (ResourceFile resource)
 		{
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
-			var path = NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (resource), "js");
-			var jsonStr = File.ReadAllText(path);
-			var json = JObject.Parse (jsonStr);
+			var json = await LoadJsonFromResource (resource);
 			var buildingsJObj = json ["response"] ["docs"];
-			Console.WriteLine (buildingsJObj);
+			BuildingAnnotation[] buildings = buildingsJObj.Select (b => new BuildingAnnotation(
+				new CLLocationCoordinate2D((int)b["latitude"], (int)b["longitude"]),
+				(string)b["name"] == null ? (string)b["name"] : "No name found",
+				(string)b["description"] == null ? (string)b["description"] : "No description found") {
+				Id = (string)b["mdo_id"] == null ? (string)b["mdo_id"] : "ID not found",
+				Name = (string)b["name"] == null ? (string)b["name"] : "No name found",
+				BuildingId = (string)b["building_number"] == null ? (string)b["building_number"] : "Building number not found",
+				ShortDescription = (string)b["description"] == null ? (string)b["description"] : "No description found",
+				ImageUrl = (string)b["image"] == null ? (string)b["image"] : "Image not found",
+				Abbreviation = (string)b["abbreviation"] == null ? (string)b["abbreviation"] : "UNKNOWN",
+				History = (string)b["history"] == null ? (string)b["history"] : "No history found",
+				FullDescription = (string)b["full_description"] == null ? (string)b["full_description"] : "No description found",
+				Tags = b["tag"].ToObject<string[]>() == null ? b["tag"].ToObject<string[]>() : new string[1],
+				Boundaries = BuildingPolygon.Create(
+					(string)b["polygon_id"], 
+					(string)b["path"], 
+					b["tag"].ToObject<string[]>() == null ? b["tag"].ToObject<string[]>() : new string[1])
+			}).ToArray ();
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
-			/*
-    [NSURLConnection sendAsynchronousRequest:[[NSURLRequest alloc] initWithURL:resourceLocation] queue:[[NSOperationQueue alloc]init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        if (!error) {
-            NSDictionary* jsonDictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if(error)
-            {
-                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Error parsing JSON file" message:[error description] delegate:self cancelButtonTitle:nil otherButtonTitles:@"Whoops", nil];
-                [alert show];
-            } else if([resourceName isEqualToString:kMARKER_DATA] || [resourceName isEqualToString:kPOLYGON_DATA])
-            {
-                NSMutableArray* allBuildings = [NSMutableArray array];
-                RITBuilding* building;
-                NSMutableArray* jsonBuildings = jsonDictionary[@"response"][@"docs"];
-                for (int progress = 0, total = [jsonBuildings count]; progress < total; progress++) {
-                    NSDictionary* dictionary = [jsonBuildings objectAtIndex:progress];
-                    building = [[RITBuilding alloc] initWithDictionary:dictionary];
-                    [allBuildings addObject:building];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        _loadProgressBar.progress = ((float)progress / (float)total);
-                    });
-                }
-                NSSortDescriptor* sortParam = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
-                NSArray* sortParams = @[sortParam];
-                [allBuildings sortUsingDescriptors:sortParams];
-                [[DataStore sharedStore].allItems addObjectsFromArray:allBuildings];
-                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    _loadProgressBar.hidden = YES;
-                    [_activityIndicator startAnimating];
-                    [self performSegueWithIdentifier:@"done" sender:self];
-                });
-            } else
-            {
-                NSMutableDictionary* allTags = [NSMutableDictionary dictionary];
-                NSArray* arr = jsonDictionary[@"facet_counts"][@"facet_fields"][@"tag"];
-                //NSLog(@"%@",arr);
-                for (int progress = 0, total = [arr count]; progress < total; progress+=2) {
-                    [allTags setObject:[arr objectAtIndex:progress+1] forKey:[arr objectAtIndex:progress]];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        _loadProgressBar.progress = ((float)progress / (float)total);
-                    });
-                }
-                [[DataStore sharedStore].allTags addEntriesFromDictionary:allTags];
-            }
-        }
-    }];
-			*/
-			return new BuildingAnnotation[]{};
+			return buildings;
+		}
+
+		public async Task<IDictionary<int, string>> LoadTags(ResourceFile resource)
+		{
+			if (resource != ResourceFile.Tags)
+				return new Dictionary<int, string>();
+			var json = await LoadJsonFromResource (resource);
+			JArray tagsJObj = (JArray)json ["facet_counts"] ["facet_fields"] ["tag"];
+			Dictionary<int, string> tags = new Dictionary<int, string>();
+			for (int progress = 0, total = tagsJObj.Count; progress < total; progress++) {
+				tags.Add((int)tagsJObj[progress+1], (string)tagsJObj[progress]);
+			}
+			return tags;
+		}
+
+		public async Task<JObject> LoadJsonFromResource(ResourceFile resource) {
+			string jsonStr;
+			if (resource == ResourceFile.Markers) {
+				var path = NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (resource), "js");
+				jsonStr = File.ReadAllText (path);
+			} else {
+				using (var client = new HttpClient ()) {
+					var uri = new Uri (Resources.ResourceFileToFileName (resource));
+					jsonStr = await client.GetStringAsync (uri);
+				}
+			}
+			return await Task.Run(() => JObject.Parse(jsonStr));
 		}
 	}
 }

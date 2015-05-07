@@ -3,6 +3,7 @@ using MapKit;
 using CoreLocation;
 using System.Collections.Generic;
 using Foundation;
+using System.Linq;
 
 namespace RITMaps.iOS
 {
@@ -22,22 +23,31 @@ namespace RITMaps.iOS
 		{
 		}
 
-		public static BuildingPolygon Create (CLLocationCoordinate2D[] coords)
+		public static BuildingPolygon Create (string polyId, CLLocationCoordinate2D[] coords, string[] tags)
 		{
-			return FromCoordinates (coords) as BuildingPolygon;
+			var polygon =  FromCoordinates (coords) as BuildingPolygon;
+			polygon.PolygonID = polyId;
+			polygon.Tags = tags;
+			return polygon;
 		}
 
-		public NSValue[] CreatePath (string pathCoords)
+		public static BuildingPolygon Create (string polyId, string coords, string[] tags)
 		{
-			var pointsMK = new List<NSValue> ();
+			if (coords == null)
+				return null;
+			return BuildingPolygon.Create (polyId, CreatePath(coords), tags);
+		}
+
+		public static CLLocationCoordinate2D[] CreatePath (string pathCoords)
+		{
+			var pointsMK = new List<CLLocationCoordinate2D> ();
 			var points = pathCoords.Split ('|');
 			foreach (var coord in points) {
 				var point = coord.Split (", ".ToCharArray ());
 				if (point.Length == 2) {
 					float x = Convert.ToSingle (point [0]);
 					float y = Convert.ToSingle (point [1]);
-					var clCoord = new CLLocationCoordinate2D (x, y);
-					pointsMK.Add (NSValue.FromMKCoordinate(clCoord));
+					pointsMK.Add (new CLLocationCoordinate2D (x, y));
 				}
 			}
 			return pointsMK.ToArray ();

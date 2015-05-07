@@ -46,7 +46,7 @@ namespace RITMaps.iOS
 
 		public override CLLocationCoordinate2D Coordinate { get { return coordinate; } }
 
-		public BuildingPolygon Boundaries { get; }
+		public BuildingPolygon Boundaries { get; set; }
 
 		public BuildingAnnotation (CLLocationCoordinate2D coord,
 		                           string title,

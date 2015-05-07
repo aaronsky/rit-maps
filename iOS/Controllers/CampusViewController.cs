@@ -176,7 +176,8 @@ namespace RITMaps.iOS
 
 		void RefreshPolygons() 
 		{
-			activeMapView.RemoveOverlays (activeMapView.Overlays);
+			if (activeMapView.Overlays != null)
+				activeMapView.RemoveOverlays (activeMapView.Overlays);
 			foreach (var building in BuildingManager.Buildings) {
 				building.Boundaries.PointInsidePolygon (activeMapView.UserLocation.Coordinate);
 				if (building.Boundaries.Path.Length != 0) {
