@@ -26,11 +26,11 @@ namespace RITMaps.iOS
 			var pins = BuildingManager.Buildings.ToArray();
 			activeMapView.AddAnnotations (pins);
 			activeMapView.ShowAnnotations (activeMapView.Annotations, true);
+			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6" && b.Boundaries != null);
 			if (CurrentSelection != null) {
 				activeMapView.SetRegion (MKCoordinateRegion.FromDistance (CurrentSelection.Coordinate, 0, 0), true);
 				activeMapView.SelectAnnotation (CurrentSelection, true);
 			}
-
 			activeMapView.ShowsBuildings = true;
 			var camera = activeMapView.Camera;
 			camera.Pitch = 45;

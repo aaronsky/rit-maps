@@ -9,11 +9,7 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="CampusViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="7"/>
-                        <viewControllerLayoutGuide type="bottom" id="8"/>
-                    </layoutGuides>
-                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="cF3-L5-YlK">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" id="cF3-L5-YlK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </mapView>
@@ -235,7 +231,7 @@
         <!--Load Data View Controller-->
         <scene sceneID="CbF-XT-b6l">
             <objects>
-                <viewController id="7q9-Fg-Tdg" sceneMemberID="viewController" customClass="LoadDataViewController">
+                <viewController id="7q9-Fg-Tdg" customClass="LoadDataViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mXk-lF-myb"/>
                         <viewControllerLayoutGuide type="bottom" id="7P8-gS-quB"/>
@@ -244,12 +240,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="fMo-lW-Hb2" misplaced="YES">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="fMo-lW-Hb2">
                                 <rect key="frame" x="16" y="304" width="568" height="2.5"/>
                                 <color key="progressTintColor" red="1" green="0.60075561079999995" blue="0.1261036881" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="trackTintColor" red="0.71437026515151514" green="0.43017340937944354" blue="0.087203345075787128" alpha="1" colorSpace="calibratedRGB"/>
                             </progressView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cYm-O5-rES" misplaced="YES">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cYm-O5-rES">
                                 <rect key="frame" x="16" y="314" width="568" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>

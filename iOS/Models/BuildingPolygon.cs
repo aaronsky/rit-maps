@@ -25,7 +25,7 @@ namespace RITMaps.iOS
 
 		public static BuildingPolygon Create (string polyId, CLLocationCoordinate2D[] coords, string[] tags)
 		{
-			var polygon =  FromCoordinates (coords) as BuildingPolygon;
+			var polygon =  (BuildingPolygon)FromCoordinates (coords);
 			if (polygon == null) {
 				return null;
 			}
@@ -37,7 +37,7 @@ namespace RITMaps.iOS
 		public static BuildingPolygon Create (string polyId, string coords, string[] tags)
 		{
 			if (coords == null)
-				return null;
+				coords = string.Empty;
 			return BuildingPolygon.Create (polyId, CreatePath(coords), tags);
 		}
 
