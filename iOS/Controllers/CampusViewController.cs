@@ -4,12 +4,17 @@ using System.CodeDom.Compiler;
 using UIKit;
 using MapKit;
 using System.Linq;
+using CoreLocation;
+using System.Threading.Tasks;
 
 namespace RITMaps.iOS
 {
 	partial class CampusViewController : UIViewController, IMKMapViewDelegate, IUIActionSheetDelegate
 	{
 		BuildingAnnotation CurrentSelection { get; set; }
+
+		bool IsAuthorized { get; set; }
+
 
 		public CampusViewController (IntPtr handle) : base (handle)
 		{
@@ -19,11 +24,14 @@ namespace RITMaps.iOS
 		{
 			base.ViewDidLoad ();
 
+			Task.Run (async () => await RequestTrackingAuthorization ());
+
 			activeMapView.Delegate = this;
 			activeMapView.ShowsUserLocation = true;
 			activeMapView.SetUserTrackingMode (MKUserTrackingMode.Follow, true);
+			activeMapView.UserInteractionEnabled = true;
 
-			var pins = BuildingManager.Buildings.ToArray();
+			var pins = BuildingManager.Buildings.ToArray ();
 			activeMapView.AddAnnotations (pins);
 			activeMapView.ShowAnnotations (activeMapView.Annotations, true);
 			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6");
@@ -33,15 +41,17 @@ namespace RITMaps.iOS
 			} else {
 				RefreshPolygons ();
 			}
+
 			activeMapView.ShowsBuildings = true;
 			var camera = activeMapView.Camera;
 			camera.Pitch = 45;
 			activeMapView.SetCamera (camera, true);
 		}
 
-		public override void DidReceiveMemoryWarning ()
+		async Task RequestTrackingAuthorization ()
 		{
-			base.DidReceiveMemoryWarning ();
+			var locationManager = new CLLocationManager ();
+			await Task.Factory.StartNew (locationManager.RequestWhenInUseAuthorization);
 		}
 
 		[Export ("mapView:viewForAnnotation:")]
@@ -74,9 +84,9 @@ namespace RITMaps.iOS
 				throw new ArgumentNullException ("overlay");
 			if (mapView == null)
 				throw new ArgumentNullException ("mapView");
-			var building = BuildingManager.Buildings.FirstOrDefault(b => b.Boundaries.Polygon.Equals(overlay));
+			var building = BuildingManager.Buildings.FirstOrDefault (b => b.Boundaries.Polygon.Equals (overlay));
 			if (building != null) {
-				var view = new MKPolygonRenderer(building.Boundaries.Polygon);
+				var view = new MKPolygonRenderer (building.Boundaries.Polygon);
 				view.LineWidth = 1;
 
 				if (building.Boundaries.IsSelected) {
@@ -85,16 +95,16 @@ namespace RITMaps.iOS
 				} else if (building.Boundaries.IsInside) {
 					view.StrokeColor = UIColor.Green;
 					view.FillColor = UIColor.Green.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.Boundaries.Tags.Contains("Parking")) {
+				} else if (building.Boundaries.Tags.Contains ("Parking")) {
 					view.StrokeColor = UIColor.Gray;
 					view.FillColor = UIColor.Gray.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.Boundaries.Tags.Contains("Academic Building")) {
+				} else if (building.Boundaries.Tags.Contains ("Academic Building")) {
 					view.StrokeColor = UIColor.Orange;
 					view.FillColor = UIColor.Orange.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.Boundaries.Tags.Contains("Residential Building")) {
+				} else if (building.Boundaries.Tags.Contains ("Residential Building")) {
 					view.StrokeColor = UIColor.Brown;
 					view.FillColor = UIColor.Brown.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.Boundaries.Tags.Contains("Building")) {
+				} else if (building.Boundaries.Tags.Contains ("Building")) {
 					view.StrokeColor = UIColor.Yellow;
 					view.FillColor = UIColor.Yellow.ColorWithAlpha ((nfloat)0.5);
 				}
@@ -151,7 +161,7 @@ namespace RITMaps.iOS
 			if (control == null)
 				throw new ArgumentNullException ("control");
 			//throw new NotImplementedException ();
-			RefreshPolygons();
+			RefreshPolygons ();
 		}
 
 		[Export ("mapViewWillStartLocatingUser:")]
@@ -175,15 +185,15 @@ namespace RITMaps.iOS
 		[Export ("mapView:didFailToLocateUserWithError:")]
 		public void DidFailToLocateUser (MKMapView mapView, NSError error)
 		{
-			RefreshPolygons();
+			RefreshPolygons ();
 		}
 
-		void RefreshPolygons() 
+		void RefreshPolygons ()
 		{
 			if (activeMapView.Overlays != null)
 				activeMapView.RemoveOverlays (activeMapView.Overlays);
 			foreach (var building in BuildingManager.Buildings) {
-				building.Boundaries.PointInsidePolygon (activeMapView.UserLocation.Coordinate);
+				building.Boundaries.IsInside = building.Boundaries.Polygon.PointInsidePolygon (activeMapView.UserLocation.Coordinate);
 				if (building.Boundaries.Path.Length != 0) {
 					activeMapView.AddOverlay (building.Boundaries.Polygon);
 				}

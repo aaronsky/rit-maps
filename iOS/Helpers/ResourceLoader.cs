@@ -23,10 +23,10 @@ namespace RITMaps.iOS
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
 			var json = await LoadJsonFromResource (resource);
 			var buildingsJObj = json ["response"] ["docs"];
-			BuildingAnnotation[] buildings = buildingsJObj.Select (b => new BuildingAnnotation (
-				new CLLocationCoordinate2D ((double)b ["latitude"], (double)b ["longitude"]),
-				(string)b ["name"] ?? "No name found",
-				(string)b ["description"] ?? "No description found") {
+			var buildings = buildingsJObj.Select (b => new BuildingAnnotation (
+				                new CLLocationCoordinate2D ((double)b ["latitude"], (double)b ["longitude"]),
+				                (string)b ["name"] ?? "No name found",
+				                (string)b ["description"] ?? "No description found") {
 				Id = (string)b ["mdo_id"] ?? "ID not found",
 				Name = (string)b ["name"] ?? "No name found",
 				BuildingId = (string)b ["building_number"] ?? "Building number not found",
@@ -40,7 +40,7 @@ namespace RITMaps.iOS
 					(string)b ["polygon_id"], 
 					(string)b ["path"], 
 					b ["tag"].ToObject<string[]> ())
-			}).ToArray ();
+			});
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
 			return buildings;
 		}
@@ -52,7 +52,7 @@ namespace RITMaps.iOS
 			var json = await LoadJsonFromResource (resource);
 			JArray tagsJObj = (JArray)json ["facet_counts"] ["facet_fields"] ["tag"];
 			Dictionary<int, string> tags = new Dictionary<int, string> ();
-			for (int progress = 0, total = tagsJObj.Count; progress < total; progress+=2) {
+			for (int progress = 0, total = tagsJObj.Count; progress < total; progress += 2) {
 				var kvp = new KeyValuePair<int, string> ((int)tagsJObj [progress + 1], (string)tagsJObj [progress]);
 				if (!tags.ContainsKey (kvp.Key)) {
 					tags.Add (kvp.Key, kvp.Value);

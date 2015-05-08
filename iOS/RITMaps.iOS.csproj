@@ -137,6 +137,7 @@
     <Compile Include="Controllers\LoadDataViewController.designer.cs">
       <DependentUpon>LoadDataViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\MKPolygonExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
