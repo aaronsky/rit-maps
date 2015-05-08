@@ -26,10 +26,12 @@ namespace RITMaps.iOS
 			var pins = BuildingManager.Buildings.ToArray();
 			activeMapView.AddAnnotations (pins);
 			activeMapView.ShowAnnotations (activeMapView.Annotations, true);
-			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6" && b.Boundaries != null);
+			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6");
 			if (CurrentSelection != null) {
 				activeMapView.SetRegion (MKCoordinateRegion.FromDistance (CurrentSelection.Coordinate, 0, 0), true);
 				activeMapView.SelectAnnotation (CurrentSelection, true);
+			} else {
+				RefreshPolygons ();
 			}
 			activeMapView.ShowsBuildings = true;
 			var camera = activeMapView.Camera;
@@ -53,10 +55,10 @@ namespace RITMaps.iOS
 			if (annotation is MKUserLocation)
 				return null;
 
-			var annotationView = new MKAnnotationView (annotation, "loc");
+			var annotationView = new MKPinAnnotationView (annotation, "loc");
 			var building = annotation as BuildingAnnotation;
 			if (building != null) {
-				//annotationView.Image = null;
+				annotationView.PinColor = MKPinAnnotationColor.Red;
 				if (building.FullDescription != "No description found") {
 					annotationView.RightCalloutAccessoryView = new UIButton (UIButtonType.DetailDisclosure);
 				}
@@ -72,27 +74,27 @@ namespace RITMaps.iOS
 				throw new ArgumentNullException ("overlay");
 			if (mapView == null)
 				throw new ArgumentNullException ("mapView");
-			var building = overlay as BuildingPolygon;
+			var building = BuildingManager.Buildings.FirstOrDefault(b => b.Boundaries.Polygon.Equals(overlay));
 			if (building != null) {
-				var view = new MKPolygonRenderer(building);
+				var view = new MKPolygonRenderer(building.Boundaries.Polygon);
 				view.LineWidth = 1;
 
-				if (building.IsSelected) {
+				if (building.Boundaries.IsSelected) {
 					view.StrokeColor = UIColor.Blue;
 					view.FillColor = UIColor.Blue.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.IsInside) {
+				} else if (building.Boundaries.IsInside) {
 					view.StrokeColor = UIColor.Green;
 					view.FillColor = UIColor.Green.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.IsInside) {
+				} else if (building.Boundaries.Tags.Contains("Parking")) {
 					view.StrokeColor = UIColor.Gray;
 					view.FillColor = UIColor.Gray.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.IsInside) {
+				} else if (building.Boundaries.Tags.Contains("Academic Building")) {
 					view.StrokeColor = UIColor.Orange;
 					view.FillColor = UIColor.Orange.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.IsInside) {
+				} else if (building.Boundaries.Tags.Contains("Residential Building")) {
 					view.StrokeColor = UIColor.Brown;
 					view.FillColor = UIColor.Brown.ColorWithAlpha ((nfloat)0.5);
-				} else if (building.IsInside) {
+				} else if (building.Boundaries.Tags.Contains("Building")) {
 					view.StrokeColor = UIColor.Yellow;
 					view.FillColor = UIColor.Yellow.ColorWithAlpha ((nfloat)0.5);
 				}
@@ -123,6 +125,7 @@ namespace RITMaps.iOS
 				CurrentSelection = mapView.SelectedAnnotations.FirstOrDefault () as BuildingAnnotation;
 				CurrentSelection.Boundaries.IsSelected = true;
 			}
+			RefreshPolygons ();
 		}
 
 		[Export ("mapView:didDeselectAnnotationView:")]
@@ -148,6 +151,7 @@ namespace RITMaps.iOS
 			if (control == null)
 				throw new ArgumentNullException ("control");
 			//throw new NotImplementedException ();
+			RefreshPolygons();
 		}
 
 		[Export ("mapViewWillStartLocatingUser:")]
@@ -181,7 +185,7 @@ namespace RITMaps.iOS
 			foreach (var building in BuildingManager.Buildings) {
 				building.Boundaries.PointInsidePolygon (activeMapView.UserLocation.Coordinate);
 				if (building.Boundaries.Path.Length != 0) {
-					activeMapView.AddOverlay (building.Boundaries);
+					activeMapView.AddOverlay (building.Boundaries.Polygon);
 				}
 			}
 		}

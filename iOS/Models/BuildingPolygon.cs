@@ -7,11 +7,13 @@ using System.Linq;
 
 namespace RITMaps.iOS
 {
-	public class BuildingPolygon : MKPolygon
+	public class BuildingPolygon
 	{
 		public string PolygonID { get; set; }
 
 		public CLLocationCoordinate2D[] Path { get; set; }
+
+		public MKPolygon Polygon {get;set;}
 
 		public bool IsSelected { get; set; }
 
@@ -25,12 +27,12 @@ namespace RITMaps.iOS
 
 		public static BuildingPolygon Create (string polyId, CLLocationCoordinate2D[] coords, string[] tags)
 		{
-			var polygon =  (BuildingPolygon)FromCoordinates (coords);
-			if (polygon == null) {
-				return null;
-			}
-			polygon.PolygonID = polyId;
-			polygon.Tags = tags;
+			var polygon = new BuildingPolygon {
+				PolygonID = polyId,
+				Path = coords,
+				Polygon = MKPolygon.FromCoordinates (coords),
+				Tags = tags
+			};
 			return polygon;
 		}
 
@@ -63,7 +65,7 @@ namespace RITMaps.iOS
 		public void PointInsidePolygon (CLLocationCoordinate2D point)
 		{
 			var mapPoint = MKMapPoint.FromCoordinate (point);
-			var polygonView = new MKPolygonRenderer (this);
+			var polygonView = new MKPolygonRenderer (Polygon);
 			var polygonViewPoint = polygonView.PointForMapPoint (mapPoint);
 			IsInside = polygonView.Path.ContainsPoint (polygonViewPoint, false);
 		}
