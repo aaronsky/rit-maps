@@ -61,14 +61,6 @@ namespace RITMaps.iOS
 			}
 			return pointsMK.ToArray ();
 		}
-
-		public void PointInsidePolygon (CLLocationCoordinate2D point)
-		{
-			var mapPoint = MKMapPoint.FromCoordinate (point);
-			var polygonView = new MKPolygonRenderer (Polygon);
-			var polygonViewPoint = polygonView.PointForMapPoint (mapPoint);
-			IsInside = polygonView.Path.ContainsPoint (polygonViewPoint, false);
-		}
 	}
 }
 
