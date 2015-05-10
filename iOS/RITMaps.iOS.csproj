@@ -75,6 +75,27 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.2\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\packages\OsmSharp.4.3.0.1002-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\packages\OsmSharp.4.3.0.1002-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp">
+      <HintPath>..\packages\OsmSharp.4.3.0.1002-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.UI">
+      <HintPath>..\packages\OsmSharp.4.3.0.1002-beta\lib\portable-net40+sl4+win8+wp7\OsmSharp.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RITMaps\RITMaps.csproj">
@@ -150,5 +171,7 @@
     <BundleResource Include="Resources\all-rit-markers.js" />
     <BundleResource Include="Resources\all-rit-polygons.js" />
     <BundleResource Include="Resources\all-rit-tags.js" />
+    <BundleResource Include="rit.geojson" />
+    <BundleResource Include="Resources\rit.routing" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 ﻿using Foundation;
 using UIKit;
+using MapKit;
 
 namespace RITMaps.iOS
 {
@@ -22,13 +23,20 @@ namespace RITMaps.iOS
 
 			// Code to start the Xamarin Test Cloud Agent
 			#if ENABLE_TEST_CLOUD
-			Xamarin.Calabash.Start();
+			//Xamarin.Calabash.Start();
 			#endif
 
 			BuildingFactory.Create = () => new ResourceLoader();
 
 			return true;
 		}
+
+		/*public override bool OpenUrl (UIApplication application, NSUrl url, string sourceApplication, NSObject annotation)
+		{
+			if (MKDirectionsRequest.IsDirectionsRequestUrl (url)) {
+				var directionsRequest = new MKDirectionsRequest (url);
+			}
+		}*/
 
 		public override void OnResignActivation (UIApplication application)
 		{

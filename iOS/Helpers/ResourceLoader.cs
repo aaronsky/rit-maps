@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define LOCAL_ONLY
+
+using System;
 using System.Collections.Generic;
 using UIKit;
 using System.IO;
@@ -64,6 +66,10 @@ namespace RITMaps.iOS
 		public async Task<JObject> LoadJsonFromResource (ResourceFile resource)
 		{
 			string jsonStr;
+			#if LOCAL_ONLY
+			var path = NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (resource), "js");
+			jsonStr = File.ReadAllText (path);
+			#else
 			if (resource == ResourceFile.Markers) {
 				var path = NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (resource), "js");
 				jsonStr = File.ReadAllText (path);
@@ -73,6 +79,7 @@ namespace RITMaps.iOS
 					jsonStr = await client.GetStringAsync (uri);
 				}
 			}
+			#endif
 			return await Task.Run (() => JObject.Parse (jsonStr));
 		}
 	}

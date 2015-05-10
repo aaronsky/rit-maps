@@ -6,15 +6,26 @@ using MapKit;
 using System.Linq;
 using CoreLocation;
 using System.Threading.Tasks;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace RITMaps.iOS
 {
-	partial class CampusViewController : UIViewController, IMKMapViewDelegate, IUIActionSheetDelegate
+	partial class CampusViewController : UIViewController, IMKMapViewDelegate
 	{
-		BuildingAnnotation CurrentSelection { get; set; }
+		public static BuildingAnnotation CurrentSelection { get; set; }
+
+		public static IBasicRouterDataSource<CHEdgeData> RouteSource {
+			get;
+			set;
+		}
+
+		MKPolyline CurrentRoute { get; set; }
 
 		bool IsAuthorized { get; set; }
-
 
 		public CampusViewController (IntPtr handle) : base (handle)
 		{
@@ -56,25 +67,80 @@ namespace RITMaps.iOS
 
 		[Export ("mapView:viewForAnnotation:")]
 		public MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation)
-		{
-			if (annotation == null)
-				throw new ArgumentNullException ("annotation");
-			if (mapView == null)
-				throw new ArgumentNullException ("mapView");
-			
-			if (annotation is MKUserLocation)
+		{			
+			if (IsUserLocationAnnotation (mapView, annotation))
 				return null;
+			
+			var annotationView = activeMapView.DequeueReusableAnnotation ("loc");
+			if (annotationView == null) {
+				annotationView = new MKAnnotationView (annotation, "loc");
+				annotationView.CanShowCallout = true;
+			} else {
+				annotationView.Annotation = annotation;
+			}
 
-			var annotationView = new MKPinAnnotationView (annotation, "loc");
 			var building = annotation as BuildingAnnotation;
 			if (building != null) {
-				annotationView.PinColor = MKPinAnnotationColor.Red;
+				//annotationView.Image = UIImage.FromBundle (string.Empty);
+				if (building.Tags.Contains ("Restroom") ||
+				    building.Tags.Contains ("Men's Restroom") ||
+				    building.Tags.Contains ("Women's Restroom") ||
+				    building.Tags.Contains ("Unisex Restroom")) {
+					//annotationView.image = [UIImage imageNamed:@"toilets-map"];
+				} else if (building.Tags.Contains ("Bike Rack") ||
+				           building.Tags.Contains ("Motorcycle Parking")) {
+					//annotationView.image = [UIImage imageNamed:@"bicycle-map"];
+				} else if (building.Tags.Contains ("Academic Building")) {
+					//annotationView.image = [UIImage imageNamed:@"college-map"];
+				} else if (building.Tags.Contains ("Parking") ||
+				           building.Tags.Contains ("General Parking") ||
+				           building.Tags.Contains ("Academic Parking") ||
+				           building.Tags.Contains ("Reserved Parking") ||
+				           building.Tags.Contains ("Residential Parking") ||
+				           building.Tags.Contains ("Short Term Parking") ||
+				           building.Tags.Contains ("Visitor Parking")) {
+					//annotationView.image = [UIImage imageNamed:@"parking-map"];
+				} else if (building.Tags.Contains ("Dining Services") ||
+				           building.Tags.Contains ("i_diningservicesplus") ||
+				           building.Tags.Contains ("Restaurants") ||
+				           building.Tags.Contains ("Food")) {
+					//annotationView.image = [UIImage imageNamed:@"fast-food-map"];
+				} else if (building.Tags.Contains ("Residential Building")) {
+					//annotationView.image = [UIImage imageNamed:@"village-map"];
+				} else if (building.Tags.Contains ("Shuttle Stop") ||
+				           building.Tags.Contains ("Bus Stop")) {
+					//annotationView.image = [UIImage imageNamed:@"bus-map"];
+				} else if (building.Tags.Contains ("WAL")) {
+					//annotationView.image = [UIImage imageNamed:@"library-map"];
+				} else if (building.Tags.Contains ("Student Services") &&
+				           (building.Tags.Contains ("NRH") || building.Tags.Contains ("GVP"))) {
+					//annotationView.image = [UIImage imageNamed:@"post-map"];
+				} else if (building.Tags.Contains ("Student Services") &&
+				           building.Tags.Contains ("SMT")) {
+					//annotationView.image = [UIImage imageNamed:@"worship-map"];
+				} else if (building.Tags.Contains ("ATM")) {
+					//annotationView.image = [UIImage imageNamed:@"atm-map"];
+				} else if (building.Tags.Contains ("Retail")) {
+					//annotationView.image = [UIImage imageNamed:@"hairdresser-map"];
+				} else if (building.Tags.Contains ("Building") && building.Id == "57") {
+					//annotationView.image = [UIImage imageNamed:@"misc-map"]; //Temporary for pitch
+					annotationView.UserInteractionEnabled = false;
+				}
+
 				if (building.FullDescription != "No description found") {
 					annotationView.RightCalloutAccessoryView = new UIButton (UIButtonType.DetailDisclosure);
 				}
 			}
-			annotationView.CanShowCallout = true;
 			return annotationView;
+		}
+
+		static bool IsUserLocationAnnotation (MKMapView mapView, IMKAnnotation annotation)
+		{
+			var usrLoc = ObjCRuntime.Runtime.GetNSObject (annotation.Handle) as MKUserLocation;
+			if (usrLoc != null) {
+				return usrLoc == mapView.UserLocation;
+			}
+			return false;
 		}
 
 		[Export ("mapView:rendererForOverlay:")]
@@ -134,6 +200,7 @@ namespace RITMaps.iOS
 			if (building != null) {
 				CurrentSelection = mapView.SelectedAnnotations.FirstOrDefault () as BuildingAnnotation;
 				CurrentSelection.Boundaries.IsSelected = true;
+				DirectionsButton.Enabled = true;
 			}
 			RefreshPolygons ();
 		}
@@ -148,6 +215,7 @@ namespace RITMaps.iOS
 			
 			CurrentSelection.Boundaries.IsSelected = false;
 			CurrentSelection = null;
+			DirectionsButton.Enabled = false;
 			RefreshPolygons ();
 		}
 
@@ -186,6 +254,40 @@ namespace RITMaps.iOS
 		public void DidFailToLocateUser (MKMapView mapView, NSError error)
 		{
 			RefreshPolygons ();
+		}
+
+		partial void ButtonTapped_ProcessDirections (UIBarButtonItem sender)
+		{
+			if (CurrentSelection == null)
+				return;
+			try {
+				var router = Router.CreateCHFrom (RouteSource, new CHRouter (), new OsmRoutingInterpreter ());
+
+				var start = router.Resolve (
+					            Vehicle.Pedestrian, 
+					            new OsmSharp.Math.Geo.GeoCoordinate (
+						            activeMapView.UserLocation.Coordinate.Latitude,
+						            activeMapView.UserLocation.Coordinate.Longitude));
+				var end = router.Resolve (
+					          Vehicle.Pedestrian, 
+					          new OsmSharp.Math.Geo.GeoCoordinate (
+						          CurrentSelection.Coordinate.Latitude, 
+						          CurrentSelection.Coordinate.Longitude));
+				if (start != null && end != null) {
+					var route = router.Calculate (Vehicle.Pedestrian, start, end);
+					if (route == null)
+						throw new NotSupportedException("Route could not be calculated from your current location", new Exception(string.Format("route:{0},start:({1},{2}),end:({3},{4})", route, start.Location.Latitude, start.Location.Longitude, end.Location.Latitude, end.Location.Longitude)));
+					CurrentRoute = MKPolyline.FromCoordinates (route.GetPoints ().Select (p => new CLLocationCoordinate2D (p.Longitude, p.Latitude)).ToArray ());
+				}
+			} catch (NotSupportedException ex) {
+				var alert = UIAlertController.Create("Route Failed", ex.Message, UIAlertControllerStyle.Alert);
+				alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, (action) => Console.WriteLine(ex.InnerException.Message)));
+				PresentViewController(alert, true, null);
+			} catch (Exception ex) {
+				Console.WriteLine (ex.Message);
+				return;
+			}
+			
 		}
 
 		void RefreshPolygons ()

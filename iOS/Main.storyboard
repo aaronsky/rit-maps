@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="7q9-Fg-Tdg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="23">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
     </dependencies>
     <scenes>
         <!--Campus View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="CampusViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="33"/>
+                        <viewControllerLayoutGuide type="bottom" id="34"/>
+                    </layoutGuides>
                     <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" showsUserLocation="YES" showsBuildings="NO" showsPointsOfInterest="NO" id="cF3-L5-YlK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </mapView>
                     <navigationItem key="navigationItem" id="QVJ-nO-ElI">
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="11"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="reply" id="11">
+                            <connections>
+                                <action selector="ProcessDirections:" destination="BYZ-38-t0r" id="35"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="activeMapView" destination="cF3-L5-YlK" id="name-outlet-cF3-L5-YlK"/>
                         <segue destination="ASF-sh-aPX" kind="show" id="Y51-o1-Gla"/>
+                        <outlet property="DirectionsButton" destination="11" id="name-outlet-11"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -62,7 +70,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Building name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u6M-IC-zHe">
                                                     <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -77,7 +85,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oRr-Nb-LIh">
                                                     <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -151,7 +159,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Room Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hN-Dt-jaG">
                                                     <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -166,7 +174,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q9g-T2-LP5">
                                                     <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -181,7 +189,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eq-ja-2RE">
                                                     <rect key="frame" x="8" y="8" width="584" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -205,7 +213,7 @@
                                                 </button>
                                             </subviews>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -231,50 +239,6 @@
             </objects>
             <point key="canvasLocation" x="1788" y="248"/>
         </scene>
-        <!--Load Data View Controller-->
-        <scene sceneID="CbF-XT-b6l">
-            <objects>
-                <viewController id="7q9-Fg-Tdg" customClass="LoadDataViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="mXk-lF-myb"/>
-                        <viewControllerLayoutGuide type="bottom" id="7P8-gS-quB"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="w6y-br-qUW">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="fMo-lW-Hb2">
-                                <rect key="frame" x="16" y="304" width="568" height="3"/>
-                                <color key="progressTintColor" red="1" green="0.60075561079999995" blue="0.1261036881" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="trackTintColor" red="0.71437026515151514" green="0.43017340937944354" blue="0.087203345075787128" alpha="1" colorSpace="calibratedRGB"/>
-                            </progressView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cYm-O5-rES">
-                                <rect key="frame" x="16" y="314" width="568" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="cYm-O5-rES" firstAttribute="top" secondItem="fMo-lW-Hb2" secondAttribute="bottom" constant="8" symbolic="YES" id="01V-Zn-uRT"/>
-                            <constraint firstItem="cYm-O5-rES" firstAttribute="trailing" secondItem="fMo-lW-Hb2" secondAttribute="trailing" id="A7X-N7-D7S"/>
-                            <constraint firstItem="fMo-lW-Hb2" firstAttribute="leading" secondItem="w6y-br-qUW" secondAttribute="leadingMargin" id="EIm-Ju-g8h"/>
-                            <constraint firstItem="cYm-O5-rES" firstAttribute="trailing" secondItem="w6y-br-qUW" secondAttribute="trailingMargin" id="Zua-ee-JxV"/>
-                            <constraint firstItem="cYm-O5-rES" firstAttribute="leading" secondItem="fMo-lW-Hb2" secondAttribute="leading" id="rYo-q3-lXM"/>
-                            <constraint firstItem="7P8-gS-quB" firstAttribute="top" secondItem="cYm-O5-rES" secondAttribute="bottom" constant="265" id="ta2-CW-MGK"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="loadProgressLabel" destination="cYm-O5-rES" id="JZ9-EA-oso"/>
-                        <outlet property="loadProgressView" destination="fMo-lW-Hb2" id="mYx-pU-XK8"/>
-                        <segue destination="IZo-vf-jiW" kind="presentation" identifier="loadSucceed" id="VuA-Zv-rGp"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4Zl-1S-xX9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1052" y="248"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="P2E-MY-eqV">
             <objects>
@@ -290,6 +254,47 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gA7-1R-Sah" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-366" y="248"/>
+        </scene>
+        <!--Load Data View Controller-->
+        <scene sceneID="22">
+            <objects>
+                <viewController id="23" customClass="LoadDataViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="20"/>
+                        <viewControllerLayoutGuide type="bottom" id="21"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="24">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hfC-P9-xXj">
+                                <rect key="frame" x="236" y="236" width="128" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="128" id="KcS-x6-H2l"/>
+                                </constraints>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="oWu-Pr-9nI">
+                                <rect key="frame" x="290" y="459" width="20" height="20"/>
+                                <color key="color" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.20392156859999999" green="0.59607843140000005" blue="0.85882352939999995" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="oWu-Pr-9nI" firstAttribute="centerX" secondItem="hfC-P9-xXj" secondAttribute="centerX" id="4q5-M4-6FY"/>
+                            <constraint firstItem="21" firstAttribute="top" secondItem="oWu-Pr-9nI" secondAttribute="bottom" constant="121" id="QLe-Ox-Pbb"/>
+                            <constraint firstItem="oWu-Pr-9nI" firstAttribute="centerX" secondItem="24" secondAttribute="centerX" id="gqv-Ca-gCD"/>
+                            <constraint firstItem="hfC-P9-xXj" firstAttribute="centerY" secondItem="24" secondAttribute="centerY" id="p00-lD-IEV"/>
+                            <constraint firstItem="oWu-Pr-9nI" firstAttribute="top" secondItem="hfC-P9-xXj" secondAttribute="bottom" constant="95" id="vva-LS-dBg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loadProgressView" destination="oWu-Pr-9nI" id="M4G-s6-dfT"/>
+                        <segue destination="IZo-vf-jiW" kind="showDetail" identifier="loadSucceed" id="RYa-ZU-2AC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="25" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1074" y="248"/>
         </scene>
     </scenes>
 </document>

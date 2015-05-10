@@ -4,11 +4,21 @@ using System.CodeDom.Compiler;
 using UIKit;
 using System.Threading.Tasks;
 using System.Linq;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
+using System.IO;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Routing.Graph.Routing;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.CH.Serialization;
 
 namespace RITMaps.iOS
 {
 	partial class LoadDataViewController : UIViewController
 	{
+		IBasicRouterDataSource<CHEdgeData> loadedRouteSource;
+
 		public LoadDataViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -18,28 +28,18 @@ namespace RITMaps.iOS
 			base.ViewDidLoad ();
 
 			// Perform any additional setup after loading the view, typically from a nib.
-			await LoadData();
+			await LoadData ();
 
 			PerformSegue ("loadSucceed", this);
 		}
 
-		public async Task LoadData()
+		public async Task LoadData ()
 		{
 			var loadedMarkers = await BuildingManager.ResourceLoader.Load (ResourceFile.Markers);
-			loadProgressView.SetProgress (0.2f, true);
-			loadProgressLabel.Text = "20%";
-			BuildingManager.Buildings.AddRange (loadedMarkers.Cast<BuildingAnnotation>());
-			loadProgressView.SetProgress (0.3f, true);
-			loadProgressLabel.Text = "30%";
+			BuildingManager.Buildings.AddRange (loadedMarkers.Cast<BuildingAnnotation> ());
 			var loadedPolygons = await BuildingManager.ResourceLoader.Load (ResourceFile.Polygons);
-			loadProgressView.SetProgress (0.5f, true);
-			loadProgressLabel.Text = "50%";
-			BuildingManager.Buildings.AddRange (loadedPolygons.Cast<BuildingAnnotation>());
-			loadProgressView.SetProgress (0.6f, true);
-			loadProgressLabel.Text = "60%";
+			BuildingManager.Buildings.AddRange (loadedPolygons.Cast<BuildingAnnotation> ());
 			var loadedTags = await BuildingManager.ResourceLoader.LoadTags (ResourceFile.Tags);
-			loadProgressView.SetProgress (0.8f, true);
-			loadProgressLabel.Text = "80%";
 			foreach (var kvp in loadedTags) {
 				if (BuildingManager.Tags.ContainsKey (kvp.Key)) {
 					BuildingManager.Tags [kvp.Key] = kvp.Value;
@@ -47,8 +47,20 @@ namespace RITMaps.iOS
 					BuildingManager.Tags.Add (kvp.Key, kvp.Value);
 				}
 			}
-			loadProgressView.SetProgress (1.0f, true);
-			loadProgressLabel.Text = "100%";
+			using (var inputStream = 
+				new FileInfo(NSBundle.MainBundle.PathForResource(Resources.ResourceFileToFileName(ResourceFile.Routing))).OpenRead())
+			{
+				var routingSerializer = new CHEdgeFlatfileSerializer ();
+				loadedRouteSource = routingSerializer.Deserialize (inputStream);
+			}
+		}
+
+		public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
+		{
+			base.PrepareForSegue (segue, sender);
+			if (segue.Identifier == "loadSucceed") {
+				CampusViewController.RouteSource = loadedRouteSource;
+			}
 		}
 	}
 }

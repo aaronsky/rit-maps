@@ -61,5 +61,7 @@
 	<array>
 		<string>MKDirectionsModePedestrian</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>RIT Maps would like to use your location.</string>
 </dict>
 </plist>
