@@ -175,15 +175,12 @@ namespace RITMaps.iOS
 					view.FillColor = UIColor.Yellow.ColorWithAlpha ((nfloat)0.5);
 				}
 				return view;
-			}
-			/*
-			else if (overlay is MKPolyline) {
-				var route = new MKPolylineRenderer (routeDetails.polyline);
+			} else if (overlay is MKPolyline) {
+				var route = new MKPolylineRenderer (CurrentRoute);
 				route.StrokeColor = UIColor.Orange;
 				route.LineWidth = 5;
 				return route;
 			}
-			*/
 			return null;
 		}
 
@@ -215,6 +212,10 @@ namespace RITMaps.iOS
 			
 			CurrentSelection.Boundaries.IsSelected = false;
 			CurrentSelection = null;
+			if (CurrentRoute != null) {
+				activeMapView.RemoveOverlay (CurrentRoute);
+				CurrentRoute = null;
+			}
 			DirectionsButton.Enabled = false;
 			RefreshPolygons ();
 		}
@@ -261,28 +262,22 @@ namespace RITMaps.iOS
 			if (CurrentSelection == null)
 				return;
 			try {
-				var router = Router.CreateCHFrom (RouteSource, new CHRouter (), new OsmRoutingInterpreter ());
-
-				var start = router.Resolve (
-					            Vehicle.Pedestrian, 
-					            new OsmSharp.Math.Geo.GeoCoordinate (
-						            activeMapView.UserLocation.Coordinate.Latitude,
-						            activeMapView.UserLocation.Coordinate.Longitude));
-				var end = router.Resolve (
-					          Vehicle.Pedestrian, 
-					          new OsmSharp.Math.Geo.GeoCoordinate (
-						          CurrentSelection.Coordinate.Latitude, 
-						          CurrentSelection.Coordinate.Longitude));
-				if (start != null && end != null) {
-					var route = router.Calculate (Vehicle.Pedestrian, start, end);
-					if (route == null)
-						throw new NotSupportedException("Route could not be calculated from your current location", new Exception(string.Format("route:{0},start:({1},{2}),end:({3},{4})", route, start.Location.Latitude, start.Location.Longitude, end.Location.Latitude, end.Location.Longitude)));
-					CurrentRoute = MKPolyline.FromCoordinates (route.GetPoints ().Select (p => new CLLocationCoordinate2D (p.Longitude, p.Latitude)).ToArray ());
+				var start = new OsmSharp.Math.Geo.GeoCoordinate(activeMapView.UserLocation.Coordinate.Latitude,activeMapView.UserLocation.Coordinate.Longitude);
+				var end = new OsmSharp.Math.Geo.GeoCoordinate(CurrentSelection.Coordinate.Latitude, CurrentSelection.Coordinate.Longitude);
+				var route = RouteHelper.Calculate(start, end);
+				CurrentRoute = MKPolyline.FromCoordinates (route.GetPoints ().Select (p => new CLLocationCoordinate2D (p.Longitude, p.Latitude)).ToArray ());
+				if (CurrentRoute == null) {
+					throw new NotSupportedException ("Route could not be drawn from the calculated route");
 				}
+				activeMapView.AddOverlay (CurrentRoute);
 			} catch (NotSupportedException ex) {
-				var alert = UIAlertController.Create("Route Failed", ex.Message, UIAlertControllerStyle.Alert);
-				alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, (action) => Console.WriteLine(ex.InnerException.Message)));
-				PresentViewController(alert, true, null);
+				var alert = UIAlertController.Create ("Route Failed", ex.Message, UIAlertControllerStyle.Alert);
+				alert.AddAction (UIAlertAction.Create ("OK", UIAlertActionStyle.Default, (action) => {
+					if (ex.InnerException != null)
+						Console.WriteLine (ex.InnerException.Message);
+				}
+				));
+				PresentViewController (alert, true, null);
 			} catch (Exception ex) {
 				Console.WriteLine (ex.Message);
 				return;

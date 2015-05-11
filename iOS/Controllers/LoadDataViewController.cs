@@ -17,7 +17,6 @@ namespace RITMaps.iOS
 {
 	partial class LoadDataViewController : UIViewController
 	{
-		IBasicRouterDataSource<CHEdgeData> loadedRouteSource;
 
 		public LoadDataViewController (IntPtr handle) : base (handle)
 		{
@@ -48,18 +47,10 @@ namespace RITMaps.iOS
 				}
 			}
 			using (var inputStream = 
-				new FileInfo(NSBundle.MainBundle.PathForResource(Resources.ResourceFileToFileName(ResourceFile.Routing))).OpenRead())
+				new FileInfo(NSBundle.MainBundle.PathForResource(Resources.ResourceFileToFileName(ResourceFile.Routing), "routing")).OpenRead())
 			{
 				var routingSerializer = new CHEdgeFlatfileSerializer ();
-				loadedRouteSource = routingSerializer.Deserialize (inputStream);
-			}
-		}
-
-		public override void PrepareForSegue (UIStoryboardSegue segue, NSObject sender)
-		{
-			base.PrepareForSegue (segue, sender);
-			if (segue.Identifier == "loadSucceed") {
-				CampusViewController.RouteSource = loadedRouteSource;
+				RouteHelper.Graph = routingSerializer.Deserialize (inputStream);
 			}
 		}
 	}
