@@ -12,7 +12,7 @@
                         <viewControllerLayoutGuide type="top" id="33"/>
                         <viewControllerLayoutGuide type="bottom" id="34"/>
                     </layoutGuides>
-                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" showsUserLocation="YES" showsBuildings="NO" showsPointsOfInterest="NO" id="cF3-L5-YlK">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" showsBuildings="NO" showsPointsOfInterest="NO" id="cF3-L5-YlK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </mapView>

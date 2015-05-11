@@ -11,6 +11,7 @@ using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Osm.Interpreter;
+using System.Collections.Generic;
 
 namespace RITMaps.iOS
 {
@@ -18,12 +19,9 @@ namespace RITMaps.iOS
 	{
 		public static BuildingAnnotation CurrentSelection { get; set; }
 
-		public static IBasicRouterDataSource<CHEdgeData> RouteSource {
-			get;
-			set;
-		}
-
 		MKPolyline CurrentRoute { get; set; }
+
+		public double ZoomLevel {get;set;}
 
 		bool IsAuthorized { get; set; }
 
@@ -42,9 +40,7 @@ namespace RITMaps.iOS
 			activeMapView.SetUserTrackingMode (MKUserTrackingMode.Follow, true);
 			activeMapView.UserInteractionEnabled = true;
 
-			var pins = BuildingManager.Buildings.ToArray ();
-			activeMapView.AddAnnotations (pins);
-			activeMapView.ShowAnnotations (activeMapView.Annotations, true);
+			activeMapView.AddAnnotations (BuildingManager.Buildings.Where (p => p.Boundaries != null).ToArray ());
 			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6");
 			if (CurrentSelection != null) {
 				activeMapView.SetRegion (MKCoordinateRegion.FromDistance (CurrentSelection.Coordinate, 0, 0), true);
@@ -65,15 +61,52 @@ namespace RITMaps.iOS
 			await Task.Factory.StartNew (locationManager.RequestWhenInUseAuthorization);
 		}
 
+		public void FilterAnnotations (BuildingAnnotation[] places)
+		{
+			var latDelta = activeMapView.Region.Span.LatitudeDelta;
+			var longDelta = activeMapView.Region.Span.LongitudeDelta;
+
+			var buildingsToDisplay = new List<MKAnnotation> ();
+			for (int i = 0; i < places.Length; i++)
+			{
+				var loc = places[i];
+				var latitude = loc.Coordinate.Latitude;
+				var longitude = loc.Coordinate.Longitude;
+				var found = false;
+				foreach (var temp in buildingsToDisplay) {
+					if (Math.Abs(temp.Coordinate.Latitude - latitude) < latDelta &&
+						Math.Abs(temp.Coordinate.Longitude - longitude) < longDelta)
+					{
+						activeMapView.RemoveAnnotation(loc);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					buildingsToDisplay.Add(loc);
+					activeMapView.AddAnnotation(loc);
+				}
+			}
+		}
+
+		[Export ("mapView:regionDidChangeAnimated:")]
+		public void RegionChanged (MapKit.MKMapView mapView, bool animated)
+		{
+			if (ZoomLevel != activeMapView.Region.Span.LongitudeDelta) {
+				FilterAnnotations (BuildingManager.Buildings.Where(p => p.Boundaries == null).ToArray());
+				ZoomLevel = mapView.Region.Span.LongitudeDelta;
+			}
+		}
+
 		[Export ("mapView:viewForAnnotation:")]
 		public MKAnnotationView GetViewForAnnotation (MKMapView mapView, IMKAnnotation annotation)
 		{			
 			if (IsUserLocationAnnotation (mapView, annotation))
 				return null;
 			
-			var annotationView = activeMapView.DequeueReusableAnnotation ("loc");
+			var annotationView = (MKPinAnnotationView)activeMapView.DequeueReusableAnnotation ("loc");
 			if (annotationView == null) {
-				annotationView = new MKAnnotationView (annotation, "loc");
+				annotationView = new MKPinAnnotationView (annotation, "loc");
 				annotationView.CanShowCallout = true;
 			} else {
 				annotationView.Annotation = annotation;
@@ -81,6 +114,7 @@ namespace RITMaps.iOS
 
 			var building = annotation as BuildingAnnotation;
 			if (building != null) {
+				/*
 				//annotationView.Image = UIImage.FromBundle (string.Empty);
 				if (building.Tags.Contains ("Restroom") ||
 				    building.Tags.Contains ("Men's Restroom") ||
@@ -124,13 +158,17 @@ namespace RITMaps.iOS
 					//annotationView.image = [UIImage imageNamed:@"hairdresser-map"];
 				} else if (building.Tags.Contains ("Building") && building.Id == "57") {
 					//annotationView.image = [UIImage imageNamed:@"misc-map"]; //Temporary for pitch
+				} else {
 					annotationView.UserInteractionEnabled = false;
 				}
+				*/
+				annotationView.PinColor = MKPinAnnotationColor.Red;
 
 				if (building.FullDescription != "No description found") {
 					annotationView.RightCalloutAccessoryView = new UIButton (UIButtonType.DetailDisclosure);
 				}
 			}
+			annotationView.LeftCalloutAccessoryView = new UIButton (UIButtonType.ContactAdd);
 			return annotationView;
 		}
 
@@ -223,14 +261,7 @@ namespace RITMaps.iOS
 		[Export ("mapView:annotationView:calloutAccessoryControlTapped:")]
 		public void CalloutAccessoryControlTapped (MKMapView mapView, MKAnnotationView view, UIControl control)
 		{
-			if (mapView == null)
-				throw new ArgumentNullException ("mapView");
-			if (view == null)
-				throw new ArgumentNullException ("view");
-			if (control == null)
-				throw new ArgumentNullException ("control");
-			//throw new NotImplementedException ();
-			RefreshPolygons ();
+			
 		}
 
 		[Export ("mapViewWillStartLocatingUser:")]
