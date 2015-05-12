@@ -40,7 +40,7 @@ namespace RITMaps.iOS
 			activeMapView.SetUserTrackingMode (MKUserTrackingMode.Follow, true);
 			activeMapView.UserInteractionEnabled = true;
 
-			activeMapView.AddAnnotations (BuildingManager.Buildings.Where (p => p.Boundaries != null).ToArray ());
+			activeMapView.AddAnnotations (BuildingManager.Buildings.Where (p => p.Boundaries.Path.Length != 0).ToArray ());
 			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6");
 			if (CurrentSelection != null) {
 				activeMapView.SetRegion (MKCoordinateRegion.FromDistance (CurrentSelection.Coordinate, 0, 0), true);
@@ -92,10 +92,10 @@ namespace RITMaps.iOS
 		[Export ("mapView:regionDidChangeAnimated:")]
 		public void RegionChanged (MapKit.MKMapView mapView, bool animated)
 		{
-			if (ZoomLevel != activeMapView.Region.Span.LongitudeDelta) {
-				FilterAnnotations (BuildingManager.Buildings.Where(p => p.Boundaries == null).ToArray());
+			/*if (ZoomLevel != activeMapView.Region.Span.LongitudeDelta) {
+				FilterAnnotations (BuildingManager.Buildings.Where (p => p.Boundaries.Path.Length == 0).ToArray ());
 				ZoomLevel = mapView.Region.Span.LongitudeDelta;
-			}
+			}*/
 		}
 
 		[Export ("mapView:viewForAnnotation:")]
