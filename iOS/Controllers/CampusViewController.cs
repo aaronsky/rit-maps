@@ -21,7 +21,7 @@ namespace RITMaps.iOS
 
 		MKPolyline CurrentRoute { get; set; }
 
-		public double ZoomLevel {get;set;}
+		public double ZoomLevel { get; set; }
 
 		bool IsAuthorized { get; set; }
 
@@ -40,7 +40,7 @@ namespace RITMaps.iOS
 			activeMapView.SetUserTrackingMode (MKUserTrackingMode.Follow, true);
 			activeMapView.UserInteractionEnabled = true;
 
-			activeMapView.AddAnnotations (BuildingManager.Buildings.Where (p => p.Boundaries.Path.Length != 0).ToArray ());
+			activeMapView.AddAnnotations (BuildingManager.Buildings.ToArray ());
 			CurrentSelection = BuildingManager.Buildings.FirstOrDefault (b => b.Id == "6");
 			if (CurrentSelection != null) {
 				activeMapView.SetRegion (MKCoordinateRegion.FromDistance (CurrentSelection.Coordinate, 0, 0), true);
@@ -67,24 +67,22 @@ namespace RITMaps.iOS
 			var longDelta = activeMapView.Region.Span.LongitudeDelta;
 
 			var buildingsToDisplay = new List<MKAnnotation> ();
-			for (int i = 0; i < places.Length; i++)
-			{
-				var loc = places[i];
+			for (int i = 0; i < places.Length; i++) {
+				var loc = places [i];
 				var latitude = loc.Coordinate.Latitude;
 				var longitude = loc.Coordinate.Longitude;
 				var found = false;
 				foreach (var temp in buildingsToDisplay) {
-					if (Math.Abs(temp.Coordinate.Latitude - latitude) < latDelta &&
-						Math.Abs(temp.Coordinate.Longitude - longitude) < longDelta)
-					{
-						activeMapView.RemoveAnnotation(loc);
+					if (Math.Abs (temp.Coordinate.Latitude - latitude) < latDelta &&
+					    Math.Abs (temp.Coordinate.Longitude - longitude) < longDelta) {
+						activeMapView.RemoveAnnotation (loc);
 						found = true;
 						break;
 					}
 				}
 				if (!found) {
-					buildingsToDisplay.Add(loc);
-					activeMapView.AddAnnotation(loc);
+					buildingsToDisplay.Add (loc);
+					activeMapView.AddAnnotation (loc);
 				}
 			}
 		}
@@ -104,9 +102,9 @@ namespace RITMaps.iOS
 			if (IsUserLocationAnnotation (mapView, annotation))
 				return null;
 			
-			var annotationView = (MKPinAnnotationView)activeMapView.DequeueReusableAnnotation ("loc");
+			var annotationView = activeMapView.DequeueReusableAnnotation ("loc");
 			if (annotationView == null) {
-				annotationView = new MKPinAnnotationView (annotation, "loc");
+				annotationView = new MKAnnotationView (annotation, "loc");
 				annotationView.CanShowCallout = true;
 			} else {
 				annotationView.Annotation = annotation;
@@ -114,17 +112,19 @@ namespace RITMaps.iOS
 
 			var building = annotation as BuildingAnnotation;
 			if (building != null) {
-				/*
 				//annotationView.Image = UIImage.FromBundle (string.Empty);
 				if (building.Tags.Contains ("Restroom") ||
 				    building.Tags.Contains ("Men's Restroom") ||
 				    building.Tags.Contains ("Women's Restroom") ||
 				    building.Tags.Contains ("Unisex Restroom")) {
+					annotationView.Image = UIImage.FromFile ("restroom_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"toilets-map"];
 				} else if (building.Tags.Contains ("Bike Rack") ||
 				           building.Tags.Contains ("Motorcycle Parking")) {
+					annotationView.Image = UIImage.FromFile ("bicycle_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"bicycle-map"];
 				} else if (building.Tags.Contains ("Academic Building")) {
+					annotationView.Image = UIImage.FromFile ("misc_map_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"college-map"];
 				} else if (building.Tags.Contains ("Parking") ||
 				           building.Tags.Contains ("General Parking") ||
@@ -133,36 +133,41 @@ namespace RITMaps.iOS
 				           building.Tags.Contains ("Residential Parking") ||
 				           building.Tags.Contains ("Short Term Parking") ||
 				           building.Tags.Contains ("Visitor Parking")) {
+					annotationView.Image = UIImage.FromFile ("parking_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"parking-map"];
 				} else if (building.Tags.Contains ("Dining Services") ||
 				           building.Tags.Contains ("i_diningservicesplus") ||
 				           building.Tags.Contains ("Restaurants") ||
 				           building.Tags.Contains ("Food")) {
+					annotationView.Image = UIImage.FromFile ("dining_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"fast-food-map"];
 				} else if (building.Tags.Contains ("Residential Building")) {
+					annotationView.Image = UIImage.FromFile ("residential_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"village-map"];
 				} else if (building.Tags.Contains ("Shuttle Stop") ||
 				           building.Tags.Contains ("Bus Stop")) {
+					annotationView.Image = UIImage.FromFile ("bus_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"bus-map"];
 				} else if (building.Tags.Contains ("WAL")) {
+					annotationView.Image = UIImage.FromFile ("library_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"library-map"];
 				} else if (building.Tags.Contains ("Student Services") &&
 				           (building.Tags.Contains ("NRH") || building.Tags.Contains ("GVP"))) {
+					annotationView.Image = UIImage.FromFile ("post_office_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"post-map"];
 				} else if (building.Tags.Contains ("Student Services") &&
 				           building.Tags.Contains ("SMT")) {
+					annotationView.Image = UIImage.FromFile ("worship_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"worship-map"];
 				} else if (building.Tags.Contains ("ATM")) {
+					annotationView.Image = UIImage.FromFile ("bank_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"atm-map"];
 				} else if (building.Tags.Contains ("Retail")) {
+					annotationView.Image = UIImage.FromFile ("barber_unfilled.png");
 					//annotationView.image = [UIImage imageNamed:@"hairdresser-map"];
-				} else if (building.Tags.Contains ("Building") && building.Id == "57") {
-					//annotationView.image = [UIImage imageNamed:@"misc-map"]; //Temporary for pitch
 				} else {
-					annotationView.UserInteractionEnabled = false;
+					annotationView.Image = UIImage.FromFile ("misc_map_unfilled.png");
 				}
-				*/
-				annotationView.PinColor = MKPinAnnotationColor.Red;
 
 				if (building.FullDescription != "No description found") {
 					annotationView.RightCalloutAccessoryView = new UIButton (UIButtonType.DetailDisclosure);
@@ -293,9 +298,9 @@ namespace RITMaps.iOS
 			if (CurrentSelection == null)
 				return;
 			try {
-				var start = new OsmSharp.Math.Geo.GeoCoordinate(activeMapView.UserLocation.Coordinate.Latitude,activeMapView.UserLocation.Coordinate.Longitude);
-				var end = new OsmSharp.Math.Geo.GeoCoordinate(CurrentSelection.Coordinate.Latitude, CurrentSelection.Coordinate.Longitude);
-				var route = RouteHelper.Calculate(start, end);
+				var start = new OsmSharp.Math.Geo.GeoCoordinate (activeMapView.UserLocation.Coordinate.Latitude, activeMapView.UserLocation.Coordinate.Longitude);
+				var end = new OsmSharp.Math.Geo.GeoCoordinate (CurrentSelection.Coordinate.Latitude, CurrentSelection.Coordinate.Longitude);
+				var route = RouteHelper.Calculate (start, end);
 				CurrentRoute = MKPolyline.FromCoordinates (route.GetPoints ().Select (p => new CLLocationCoordinate2D (p.Longitude, p.Latitude)).ToArray ());
 				if (CurrentRoute == null) {
 					throw new NotSupportedException ("Route could not be drawn from the calculated route");

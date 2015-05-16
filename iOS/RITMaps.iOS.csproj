@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="Models\MKPolygonExtensions.cs" />
     <Compile Include="Extensions\RouterExtensions.cs" />
+    <Compile Include="Helpers\QuadTree.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -175,5 +176,35 @@
     <BundleResource Include="Resources\all-rit-tags.js" />
     <BundleResource Include="rit.geojson" />
     <BundleResource Include="Resources\rit.routing" />
+    <BundleResource Include="Resources\bank_filled.png" />
+    <BundleResource Include="Resources\bank_unfilled.png" />
+    <BundleResource Include="Resources\barber_filled.png" />
+    <BundleResource Include="Resources\barber_unfilled.png" />
+    <BundleResource Include="Resources\bicycle_filled.png" />
+    <BundleResource Include="Resources\bicycle_unfilled.png" />
+    <BundleResource Include="Resources\bullet_list_filled.png" />
+    <BundleResource Include="Resources\bullet_list_unfilled.png" />
+    <BundleResource Include="Resources\bus_filled.png" />
+    <BundleResource Include="Resources\bus_unfilled.png" />
+    <BundleResource Include="Resources\current_location_filled.png" />
+    <BundleResource Include="Resources\current_location_unfilled.png" />
+    <BundleResource Include="Resources\dining_filled.png" />
+    <BundleResource Include="Resources\dining_unfilled.png" />
+    <BundleResource Include="Resources\library_filled.png" />
+    <BundleResource Include="Resources\library_unfilled.png" />
+    <BundleResource Include="Resources\list_filled.png" />
+    <BundleResource Include="Resources\list_unfilled.png" />
+    <BundleResource Include="Resources\misc_map_filled.png" />
+    <BundleResource Include="Resources\misc_map_unfilled.png" />
+    <BundleResource Include="Resources\parking_filled.png" />
+    <BundleResource Include="Resources\parking_unfilled.png" />
+    <BundleResource Include="Resources\post_office_filled.png" />
+    <BundleResource Include="Resources\post_office_unfilled.png" />
+    <BundleResource Include="Resources\residential_filled.png" />
+    <BundleResource Include="Resources\residential_unfilled.png" />
+    <BundleResource Include="Resources\restroom_filled.png" />
+    <BundleResource Include="Resources\restroom_unfilled.png" />
+    <BundleResource Include="Resources\worship_filled.png" />
+    <BundleResource Include="Resources\worship_unfilled.png" />
   </ItemGroup>
 </Project>
