@@ -1,4 +1,4 @@
-﻿namespace RITMaps
+﻿namespace RITMaps.Helpers
 {
 	public enum ResourceFile
 	{
@@ -10,15 +10,15 @@
 
 	public static class Resources
 	{
-		static string MarkerFileName { get; } = "all-rit-markers";
+		static string MarkerFileName { get { return "all-rit-markers"; } }
 
-		static string PolygonUrl { get; } = "all-rit-polygons";
+		static string PolygonUrl { get { return "all-rit-polygons"; } }
 		//"http://maps.rit.edu/proxySearch/?q=*&wt=json&indent=off&fq=polygon_id:*&rows=1000&fl=name,mdo_id,description,longitude,latitude,path,abbreviation,building_number,image,tag";
 
-		static string TagUrl { get; } = "all-rit-tags";
+		static string TagUrl { get { return "all-rit-tags"; } }
 		//"http://maps.rit.edu/proxySearch/?q=*&wt=json&indent=on&facet=on&facet.field=tag&facet.mincount=1&rows=0";
 
-		static string OsmUrl { get; } = "rit";
+        static string OsmUrl { get { return "rit"; } }
 
 		public static string ResourceFileToFileName (ResourceFile resource)
 		{

@@ -22,6 +22,12 @@ namespace RITMaps.iOS
 		[JsonProperty ("image")]
 		public string ImageUrl { get; set; }
 
+        [JsonProperty("latitude")]
+        public double Latitude { get; set; }
+
+        [JsonProperty("longitude")]
+        public double Longitude { get; set; }
+
 		[JsonProperty ("abbreviation")]
 		public string Abbreviation { get; set; }
 
@@ -48,6 +54,13 @@ namespace RITMaps.iOS
 
 		public BuildingPolygon Boundaries { get; set; }
 
+        public int Count { get; set; }
+
+        public BuildingAnnotation(CLLocationCoordinate2D coord, int count) : this(coord, "", "")
+        {
+            Count = count;
+        }
+
 		public BuildingAnnotation (CLLocationCoordinate2D coord,
 		                           string title,
 		                           string subtitle)
@@ -56,6 +69,6 @@ namespace RITMaps.iOS
 			this.title = title;
 			this.subtitle = subtitle;
 		}
-	}
+    }
 }
 

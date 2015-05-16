@@ -12,6 +12,9 @@ using OsmSharp.Routing.Graph.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.CH.Serialization;
+using System.Collections.Generic;
+using RITMaps.Models;
+using RITMaps.Helpers;
 
 namespace RITMaps.iOS
 {
@@ -34,10 +37,14 @@ namespace RITMaps.iOS
 
 		public async Task LoadData ()
 		{
+            var dataList = new List<BuildingAnnotation>();
 			var loadedMarkers = await BuildingManager.ResourceLoader.Load (ResourceFile.Markers);
-			BuildingManager.Buildings.AddRange (loadedMarkers.Cast<BuildingAnnotation> ());
+            dataList.AddRange(loadedMarkers.Cast<BuildingAnnotation>());
 			var loadedPolygons = await BuildingManager.ResourceLoader.Load (ResourceFile.Polygons);
-			BuildingManager.Buildings.AddRange (loadedPolygons.Cast<BuildingAnnotation> ());
+            dataList.AddRange(loadedPolygons.Cast<BuildingAnnotation>());
+            var world = new BoundingBox(19, -166, 72, -53);
+            BuildingManager.Buildings = new QuadTree<BuildingAnnotation>(dataList.ToArray(), world, 4);
+
 			var loadedTags = await BuildingManager.ResourceLoader.LoadTags (ResourceFile.Tags);
 			foreach (var kvp in loadedTags) {
 				if (BuildingManager.Tags.ContainsKey (kvp.Key)) {

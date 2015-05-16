@@ -10,6 +10,7 @@ using Foundation;
 using CoreLocation;
 using System.Net.Http;
 using System.Threading.Tasks;
+using RITMaps.Helpers;
 
 namespace RITMaps.iOS
 {
@@ -34,6 +35,8 @@ namespace RITMaps.iOS
 				BuildingId = (string)b ["building_number"] ?? "Building number not found",
 				ShortDescription = (string)b ["description"] ?? "No description found",
 				ImageUrl = (string)b ["image"] ?? "Image not found",
+                Latitude = (double)b ["latitude"],
+                Longitude = (double)b ["longitude"],
 				Abbreviation = (string)b ["abbreviation"] ?? "UNKNOWN",
 				History = (string)b ["history"] ?? "No history found",
 				FullDescription = (string)b ["full_description"] ?? "No description found",

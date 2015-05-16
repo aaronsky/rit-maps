@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace RITMaps
+namespace RITMaps.Helpers
 {
 	public abstract class BuildingManagerBase
 	{

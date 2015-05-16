@@ -1,6 +1,7 @@
 ﻿using Foundation;
 using UIKit;
 using MapKit;
+using RITMaps.Helpers;
 
 namespace RITMaps.iOS
 {

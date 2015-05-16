@@ -5,7 +5,7 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Osm.Interpreter;
 
-namespace RITMaps
+namespace RITMaps.Helpers
 {
 	public static class RouteHelper
 	{

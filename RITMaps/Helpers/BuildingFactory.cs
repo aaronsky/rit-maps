@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RITMaps
+namespace RITMaps.Helpers
 {
 	public static class BuildingFactory
 	{

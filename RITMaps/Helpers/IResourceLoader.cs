@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
-namespace RITMaps
+namespace RITMaps.Helpers
 {
 	public interface IResourceLoader
 	{
