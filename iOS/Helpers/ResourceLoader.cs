@@ -21,27 +21,24 @@ namespace RITMaps.iOS
 			Console.WriteLine ("ResourceLoader iOS initialized");
 		}
 
-		public async Task<IEnumerable<IRITBuilding>> Load (ResourceFile resource)
+		public async Task<IEnumerable<RITBuilding>> Load (ResourceFile resource)
 		{
 			UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
 			var json = await LoadJsonFromResource (resource);
 			var buildingsJObj = json ["response"] ["docs"];
-			var buildings = buildingsJObj.Select (b => new BuildingAnnotation (
-				                new CLLocationCoordinate2D ((double)b ["latitude"], (double)b ["longitude"]),
-				                (string)b ["name"] ?? "No name found",
-				                (string)b ["description"] ?? "No description found") {
+			var buildings = buildingsJObj.Select (b => new RITBuilding {
 				Id = (string)b ["mdo_id"] ?? "ID not found",
 				Name = (string)b ["name"] ?? "No name found",
 				BuildingId = (string)b ["building_number"] ?? "Building number not found",
 				ShortDescription = (string)b ["description"] ?? "No description found",
 				ImageUrl = (string)b ["image"] ?? "Image not found",
-                Latitude = (double)b ["latitude"],
-                Longitude = (double)b ["longitude"],
+				Latitude = (double)b ["latitude"],
+				Longitude = (double)b ["longitude"],
 				Abbreviation = (string)b ["abbreviation"] ?? "UNKNOWN",
 				History = (string)b ["history"] ?? "No history found",
 				FullDescription = (string)b ["full_description"] ?? "No description found",
 				Tags = b ["tag"].ToObject<string[]> () ?? new string[1],
-				Boundaries = BuildingPolygon.Create (
+				Boundaries = BuildingPolygon.Create(
 					(string)b ["polygon_id"], 
 					(string)b ["path"], 
 					b ["tag"].ToObject<string[]> ())

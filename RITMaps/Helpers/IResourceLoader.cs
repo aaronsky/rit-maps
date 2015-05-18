@@ -8,7 +8,7 @@ namespace RITMaps.Helpers
 {
 	public interface IResourceLoader
 	{
-		Task<IEnumerable<IRITBuilding>> Load(ResourceFile resource);
+		Task<IEnumerable<RITBuilding>> Load(ResourceFile resource);
 		Task<IDictionary<int, string>> LoadTags (ResourceFile resource);
 		Task<JObject> LoadJsonFromResource(ResourceFile resource);
 		//Stream LoadStreamFromResource(ResourceFile resource);

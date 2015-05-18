@@ -37,13 +37,13 @@ namespace RITMaps.iOS
 
 		public async Task LoadData ()
 		{
-            var dataList = new List<BuildingAnnotation>();
+			var dataList = new List<RITBuilding> ();
 			var loadedMarkers = await BuildingManager.ResourceLoader.Load (ResourceFile.Markers);
-            dataList.AddRange(loadedMarkers.Cast<BuildingAnnotation>());
+			dataList.AddRange (loadedMarkers);
 			var loadedPolygons = await BuildingManager.ResourceLoader.Load (ResourceFile.Polygons);
-            dataList.AddRange(loadedPolygons.Cast<BuildingAnnotation>());
-            var world = new BoundingBox(19, -166, 72, -53);
-            BuildingManager.Buildings = new QuadTree<BuildingAnnotation>(dataList.ToArray(), world, 4);
+			dataList.AddRange (loadedPolygons);
+			var world = new BoundingBox (-78, 43, -77, 44);
+			BuildingManager.Buildings = QuadTree<RITBuilding>.Create (dataList.ToArray (), world, 4);
 
 			var loadedTags = await BuildingManager.ResourceLoader.LoadTags (ResourceFile.Tags);
 			foreach (var kvp in loadedTags) {
@@ -54,8 +54,7 @@ namespace RITMaps.iOS
 				}
 			}
 			using (var inputStream = 
-				new FileInfo(NSBundle.MainBundle.PathForResource(Resources.ResourceFileToFileName(ResourceFile.Routing), "routing")).OpenRead())
-			{
+				       new FileInfo (NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (ResourceFile.Routing), "routing")).OpenRead ()) {
 				var routingSerializer = new CHEdgeFlatfileSerializer ();
 				RouteHelper.Graph = routingSerializer.Deserialize (inputStream);
 			}

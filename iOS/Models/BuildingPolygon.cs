@@ -7,21 +7,13 @@ using System.Linq;
 
 namespace RITMaps.iOS
 {
-	public class BuildingPolygon
+	public class BuildingPolygon : RITPolygon
 	{
-		public string PolygonID { get; set; }
-
 		public CLLocationCoordinate2D[] Path { get; set; }
 
 		public MKPolygon Polygon {get;set;}
 
-		public bool IsSelected { get; set; }
-
-		public bool IsInside { get; set; }
-
-		public string[] Tags { get; set; }
-
-		private BuildingPolygon ()
+		BuildingPolygon ()
 		{
 		}
 

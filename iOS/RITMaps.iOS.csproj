@@ -196,6 +196,8 @@
     </Compile>
     <Compile Include="Extensions\MKPolygonExtensions.cs" />
     <Compile Include="Extensions\RouterExtensions.cs" />
+    <Compile Include="Models\BuildingAnnotationView.cs" />
+    <Compile Include="Models\BuildingAnnotationCluster.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup />

@@ -7,8 +7,11 @@ namespace RITMaps.iOS
 {
 	partial class BuildingViewController : UITableViewController
 	{
-		public BuildingViewController (IntPtr handle) : base (handle)
+		public RITBuilding Building { get; set; }
+
+		public BuildingViewController (RITBuilding building) : base (UITableViewStyle.Grouped)
 		{
+			Building = building;
 		}
 	}
 }
