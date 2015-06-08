@@ -1,18 +1,11 @@
 using Foundation;
 using System;
-using System.CodeDom.Compiler;
 using UIKit;
 using MapKit;
 using System.Linq;
 using CoreLocation;
 using System.Threading.Tasks;
-using OsmSharp.Routing;
-using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.Osm.Interpreter;
 using System.Collections.Generic;
-using RITMaps.Helpers;
 using CoreAnimation;
 
 namespace RITMaps.iOS
@@ -352,10 +345,7 @@ namespace RITMaps.iOS
 			if (CurrentBuilding == null)
 				return;
 			try {
-				var start = new OsmSharp.Math.Geo.GeoCoordinate (activeMapView.UserLocation.Coordinate.Latitude, activeMapView.UserLocation.Coordinate.Longitude);
-				var end = new OsmSharp.Math.Geo.GeoCoordinate (CurrentBuilding.Latitude, CurrentBuilding.Longitude);
-				var route = RouteHelper.Calculate (start, end);
-				CurrentRoute = MKPolyline.FromCoordinates (route.GetPoints ().Select (p => new CLLocationCoordinate2D (p.Longitude, p.Latitude)).ToArray ());
+				CurrentRoute = null;
 				if (CurrentRoute == null) {
 					throw new NotSupportedException ("Route could not be drawn from the calculated route");
 				}

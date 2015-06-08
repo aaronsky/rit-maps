@@ -1,17 +1,8 @@
 using Foundation;
 using System;
-using System.CodeDom.Compiler;
 using UIKit;
 using System.Threading.Tasks;
-using System.Linq;
-using OsmSharp.Routing;
-using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Routing.Graph.Routing;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization.Sorted;
-using OsmSharp.Routing.CH.Serialization;
 using System.Collections.Generic;
 using RITMaps.Models;
 using RITMaps.Helpers;
@@ -55,8 +46,7 @@ namespace RITMaps.iOS
 			}
 			using (var inputStream = 
 				       new FileInfo (NSBundle.MainBundle.PathForResource (Resources.ResourceFileToFileName (ResourceFile.Routing), "routing")).OpenRead ()) {
-				var routingSerializer = new CHEdgeFlatfileSerializer ();
-				RouteHelper.Graph = routingSerializer.Deserialize (inputStream);
+
 			}
 		}
 	}
